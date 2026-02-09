@@ -6,6 +6,7 @@
   <title>Harry Ellis | Field Test Engineer</title>
   <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
 
   <!-- ***** Header ***** -->
@@ -25,40 +26,37 @@
     <section class="intro" id="intro">
       <div class="row">
         <h2>Explore My Work</h2>
-        <p>Choose a category below to explore projects from my personal builds, university, and professional experience.</p>
+        <p>Choose a category below to explore my projects.</p>
 
         <div class="categories">
 
           <!-- Mechanical Projects -->
           <div class="category">
-            <button class="category-btn">Personal Projects ▼</button>
+            <button class="category-btn">Mechanical Projects ▼</button>
             <ul class="dropdown">
-              <li><a href="electric-skateboard.html">Electric Skateboard</a></li>
               <li><a href="table-saw.html">Tablesaw</a></li>
               <li><a href="flame-thrower.html">Flamethrower</a></li>
-              
+            </ul>
+          </div>
 
+          <!-- Robotics -->
+          <div class="category">
+            <button class="category-btn">Robotics ▼</button>
+            <ul class="dropdown">
+              <li><a href="UAV.html">UAV</a></li>
+              <li><a href="autonomous-boat.html">Autonomous Boat</a></li>
+              <li><a href="electric-skateboard.html">Electric Skateboard</a></li>
             </ul>
           </div>
 
           <!-- Software Projects -->
           <div class="category">
-            <button class="category-btn">Work Experience ▼</button>
+            <button class="category-btn">Software Projects ▼</button>
             <ul class="dropdown">
-              <li><a href="rsvp-reader.html">RSVP Speed Reader</a>
-        
+              <li><a href="rsvp-reader.html">RSVP Speed Reader</a></li>
+              <li><a href="gnss_article.html">GNSS Disruption During Maduro Capture</a></li>
             </ul>
           </div>
-          <!-- University -->
-          <div class="category">
-            <button class="category-btn">University ▼</button>
-            <ul class="dropdown">
-              <li><a href="UAV.html">UAV</a></li>
-              <li><a href="autonomous-boat.html">Autonomous Boat</a></li>
-            </ul>
-          </div>
-
-          
 
           <!-- AI Projects -->
           <div class="category">
@@ -73,45 +71,43 @@
     </section>
   </main>
 
- <script>
-  const categories = document.querySelectorAll('.category');
+  <script>
+    const categories = document.querySelectorAll('.category');
 
-  categories.forEach(cat => {
-  const btn = cat.querySelector('.category-btn');
-  const dropdown = cat.querySelector('.dropdown');
+    categories.forEach(cat => {
+      const btn = cat.querySelector('.category-btn');
+      const dropdown = cat.querySelector('.dropdown');
 
-  if (!btn || !dropdown) return;
+      if (!btn || !dropdown) return;
 
-  btn.addEventListener('click', () => {
+      btn.addEventListener('click', () => {
 
-    // Close all other dropdowns
-    document.querySelectorAll('.dropdown').forEach(list => {
-      if (list !== dropdown) list.style.display = 'none';
+        // Close all other dropdowns
+        document.querySelectorAll('.dropdown').forEach(list => {
+          if (list !== dropdown) list.style.display = 'none';
+        });
+
+        // Toggle this one
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+      });
     });
-
-    // Toggle this one
-    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-  });
-  });
-</script>
+  </script>
 
   <!-- ***** About Me Section ***** -->
-<section class="about-me" id="about-me">
-  <div class="row about-me__container">
-    <div class="about-me__photo">
-      <img src="./images/profile.jpg" alt="Harry Ellis">
-    </div>
-    <div class="about-me__text">
-      <h2>About Me</h2>
-      <p>
-        Hi, I'm Harry Ellis, a Field Test Engineer focused on improving real-world applications of AI and robotics. I have experience in electro-mechanical design, UAVs, autonomous systems, and personal engineering projects. I enjoy tackling practical engineering challenges and turning ideas into functional solutions.
-      </p>
-    </div>
-  </div>
-</section>
+  <section class="about-me" id="about-me">
+    <div class="row about-me__container">
+      <div class="about-me__photo">
+        <img src="./images/profile.jpg" alt="Harry Ellis">
+      </div>
 
-  
-
+      <div class="about-me__text">
+        <h2>About Me</h2>
+        <p>
+          Hi, I'm Harry Ellis, a Field Test Engineer focused on improving real-world applications of AI and robotics. I have experience in electro-mechanical design, UAVs, autonomous systems, and personal engineering projects. I enjoy tackling practical engineering challenges and turning ideas into functional solutions.
+        </p>
+      </div>
+    </div>
+  </section>
 
 </body>
 </html>
