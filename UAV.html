@@ -12,7 +12,9 @@
 <header class="project-hero" style="background-image: url('./images/project-banner.jpg');">
   <div class="project-hero__overlay">
     <h1 class="project-title">Swashplate-less UAV</h1>
-    <p class="project-subtitle">Digital cyclic control system replacing traditional helicopter mechanics.</p>
+    <p class="project-subtitle">
+      Replacing helicopter swashplates with real-time electronic cyclic control.
+    </p>
   </div>
 </header>
 
@@ -23,62 +25,158 @@
   <section class="project-section">
     <h2>Overview</h2>
     <p>
-      Designed, manufactured, and tested a swashplate-less unmanned aerial vehicle (UAV), replacing traditional mechanical control with a digital cyclic system. 
-      The objective was to simplify helicopter mechanics while maintaining full 4-axis flight control: pitch, roll, yaw, and throttle.
+      This project was completed as my <strong>Final Year Project during my Mechanical Engineering degree</strong>.
+      It investigates whether the mechanical complexity of a helicopter swashplate can be replaced
+      with an entirely electronic cyclic control system.
+    </p>
+    <p>
+      Instead of using servos and linkages to vary blade pitch, this UAV generates cyclic control
+      by rapidly modulating motor torque in synchronisation with rotor position. This produces
+      directional lift through passive blade hinges, achieving pitch and roll authority without
+      a swashplate.
+    </p>
+    <p>
+      The concept builds directly on academic work from the University of Pennsylvania,
+      particularly research by James Paulos under Prof. Mark Yim, which demonstrated that
+      underactuated rotors with passive hinges can be controlled using a single motor.
     </p>
   </section>
 
-  <!-- GALLERY -->
+
+  <!-- CORE IDEA -->
   <section class="project-section">
-    <h2>Gallery</h2>
-    <div class="project-gallery">
-      <img src="./images/Picture1.png" alt="Photo 1">
-      <img src="./images/Picture2.png" alt="UAV image 2">
-      <img src="./images/Picture3.png" alt="UAV image 3">
-      <img src="./images/Picture4.png" alt="UAV image 4">
-    </div>
+    <h2>Core Idea: Electronic Cyclic Control</h2>
+    <p>
+      In a conventional helicopter, cyclic pitch is achieved mechanically by tilting a swashplate.
+      In this UAV, cyclic control is generated electronically by synchronising motor torque
+      with rotor position.
+    </p>
+    <p>
+      A magnetic encoder mounted beneath the motor shaft provides absolute angular position.
+      This allows the motor torque to be modulated once per rotation using a sinusoidal control signal.
+      The resulting lead–lag motion of the hinged blades produces a cyclic variation in blade pitch,
+      generating directional lift without any moving control surfaces.
+    </p>
   </section>
 
   <!-- ENGINEERING HIGHLIGHTS -->
   <section class="project-section">
     <h2>Engineering Highlights</h2>
     <ul>
-      <li>Integrated Teensy 4.0 microcontroller with real-time magnetic encoder feedback</li>
-      <li>Developed dual-rotor control algorithm for pitch, roll, and yaw</li>
-      <li>FEA analysis performed on airframe and carbon tail boom</li>
-      <li>Thrust and PID loop testing conducted in a custom acrylic safety rig</li>
+      <li>Custom swashplate-less rotor hub with angled lead–lag hinges</li>
+      <li>AS5047P magnetic encoder providing absolute rotor position feedback</li>
+      <li>Teensy 4.0 microcontroller running closed-loop control at ~500 Hz</li>
+      <li>Electronic speed controller driven at up to 4 kHz using Oneshot125</li>
+      <li>Custom control mixing using sine and cosine of rotor angle</li>
+      <li>Thrust, PID, and torque modulation testing in an acrylic safety cage</li>
     </ul>
   </section>
 
-  <!-- TECHNICAL DETAILS -->
   <section class="project-section">
-    <h2>Technical Details</h2>
-    <ul>
-      <li>Electronic cyclic control using dynamic rotor speed modulation</li>
-      <li>Magnetic encoder feedback loop for precise rotor indexing</li>
-      <li>3D printed PLA fuselage for rapid prototyping</li>
-      <li>Custom C++ firmware adapted from dRehmFlight</li>
-    </ul>
+    <h2>Referenced Research & Inspiration</h2>
+    <p>
+      A key academic reference for this work is the swashplate-less rotor research carried out
+      at the University of Pennsylvania by James Paulos under the supervision of Prof. Mark Yim.
+      Their work demonstrates how passive blade hinges and precise motor control can replace
+      traditional cyclic mechanisms in micro air vehicles.
+    </p>
+
+  <div class="video-fallback">
+    <a href="https://www.youtube.com/watch?v=aEPf0QHVuMM" target="_blank" rel="noopener noreferrer">
+      <img src="https://img.youtube.com/vi/aEPf0QHVuMM/hqdefault.jpg"
+          alt="Underactuated Rotor – University of Pennsylvania">
+      <p>Underactuated Rotor for Swashplate-less Flight (UPenn)</p>
+    </a>
+  </div>
+
+
+
+    <p>
+      Additional inspiration came from independent experimentation in the maker community,
+      particularly Tom Stanton’s YouTube work exploring virtual swashplates and speed-modulated
+      rotor control using angled hinges. His demonstrations provided practical insight into
+      real-world implementation challenges of swashplate-less flight.
+    </p>
   </section>
 
-  <!-- OBJECTIVES -->
+
+  <!-- CONTROL SYSTEM -->
   <section class="project-section">
-    <h2>Objectives</h2>
-    <ul>
-      <li>Develop a swashplate-less helicopter using fully digital actuation</li>
-      <li>Investigate advantages and limitations of electronic cyclic control</li>
-      <li>Prototype, refine, and test for stable, controllable flight</li>
-      <li>Explore applications for future UAV systems using reduced mechanical complexity</li>
-    </ul>
+    <h2>Control System & Firmware</h2>
+    <p>
+      Initial attempts to integrate the system with a traditional flight controller
+      proved impractical due to the unconventional control architecture.
+      The final design uses the Teensy 4.0 as the primary flight controller,
+      handling radio input, IMU fusion, PID stabilisation, encoder feedback,
+      and motor control on a single microcontroller.
+    </p>
+    <p>
+      The firmware was adapted from the open-source <em>dRehmFlight</em> project,
+      with significant modifications to support cyclic torque modulation.
+      Pitch and roll commands are resolved into sinusoidal motor commands
+      based on the real-time rotor angle.
+    </p>
   </section>
+
+  <!-- STRUCTURAL DESIGN -->
+  <section class="project-section">
+    <h2>Mechanical Design & Analysis</h2>
+    <p>
+      The airframe was designed for rapid iteration and manufactured primarily from 3D printed PLA,
+      with a carbon fibre tail boom supporting the yaw rotor.
+      Finite Element Analysis was performed on critical structural components
+      to validate strength under worst-case thrust and moment loads.
+    </p>
+    <p>
+      Despite the lightweight construction, stresses remained well below material limits,
+      even under conservative loading assumptions.
+    </p>
+  </section>
+
+  <!-- TESTING -->
+  <section class="project-section">
+    <h2>Testing & Results</h2>
+    <p>
+      Extensive ground testing was carried out before flight attempts.
+      This included encoder verification, IMU validation, PID response testing,
+      thrust measurement, and slow-motion analysis of blade motion.
+    </p>
+    <p>
+      Thrust testing showed that the hinged rotor produces slightly reduced efficiency
+      compared to a rigid propeller, likely due to non-optimal blade angles under constant RPM.
+      Initial flight tests demonstrated controllability but highlighted sensitivity
+      to hinge friction and mass balance.
+    </p>
+  </section>
+
+  <section class="project-section">
+    <h2>Key Disadvantage: Motor Speed Modulation</h2>
+    <p>
+      The primary disadvantage of a swashplate-less cyclic system is its reliance on
+      <strong>continuous acceleration and deceleration of the main rotor motor within each
+      revolution</strong>.
+    </p>
+    <p>
+      Unlike traditional helicopters that operate the main rotor at near-constant RPM,
+      this approach requires high-bandwidth torque control to repeatedly speed up and slow down
+      the motor in precise angular phases.
+    </p>
+    <ul>
+      <li>Increased electrical and thermal stress on the motor and ESC</li>
+      <li>Reduced efficiency compared to constant-RPM operation</li>
+      <li>Greater dependence on fast control loops and accurate rotor position sensing</li>
+    </ul>
+</section>
+
 
   <!-- FUTURE WORK -->
   <section class="project-section">
     <h2>Future Work</h2>
     <ul>
-      <li>Improve hinge friction and mechanical response</li>
-      <li>Implement high-speed strobe testing for rotor pitch visualisation</li>
-      <li>Evaluate dual-rotor configurations for increased stability and payload</li>
+      <li>Refine hinge geometry and materials to reduce friction</li>
+      <li>Implement stroboscopic blade pitch visualisation</li>
+      <li>Explore dual-main-rotor (dualcopter) configurations</li>
+      <li>Investigate applications in micro air vehicles (MAVs)</li>
     </ul>
   </section>
 
@@ -87,10 +185,10 @@
     <h2>Skills & Tools</h2>
     <ul>
       <li><strong>CAD & Simulation:</strong> SolidWorks, ANSYS FEA</li>
-      <li><strong>Electronics:</strong> Teensy 4.0, ESCs, IMUs, Magnetic Encoders</li>
-      <li><strong>Programming:</strong> C++, Arduino Framework</li>
-      <li><strong>Fabrication:</strong> 3D Printing, Carbon Composites</li>
-      <li><strong>Testing:</strong> PID tuning, thrust measurement, data logging</li>
+      <li><strong>Embedded Systems:</strong> Teensy 4.0, IMUs, magnetic encoders</li>
+      <li><strong>Control Systems:</strong> PID tuning, cyclic control, sensor fusion</li>
+      <li><strong>Programming:</strong> C++, Arduino framework</li>
+      <li><strong>Testing:</strong> Thrust measurement, data logging, high-speed video</li>
     </ul>
   </section>
 
