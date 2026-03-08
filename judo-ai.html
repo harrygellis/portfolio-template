@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Title | Harry Ellis</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<!-- ===== HERO SECTION ===== -->
+<header class="project-hero" style="background-image: url('./images/project-banner.jpg');">
+  <div class="project-hero__overlay">
+    <h1 class="project-title">Using computer vision to get actionable insights for Judo competions</h1>
+    <p class="project-subtitle">
+      An introduction to AI and computer vision, applied to a sport I am deeply interested in.
+    </p>
+  </div>
+</header>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="project-main">
+
+  <!-- OVERVIEW -->
+  <section class="project-section">
+    <h2>Overview</h2>
+    <p>
+        My martial arts journey began in my first year at university when I joined the Japanese Jiu Jitsu club.
+        This quickly developed into a strong interest in grappling, leading me to also join the Brazilian Jiu Jitsu
+        club and eventually help refound the Judo club at Newcastle University. 
+
+        At the same time, computer vision has been increasingly used in professional sports coverage to provide
+        performance analysis and tactical insights. I wanted to explore what similar analysis might look like if
+        applied to Judo competitions.
+    </p>
+  </section>
+
+  <!-- BUILD PROCESS -->
+  <section class="project-section">
+    <h2>Build Process</h2>
+
+    <p>
+        I began by applying OpenPose to Judo competition footage to evaluate how well pose estimation performs
+        in a fast-paced grappling environment. The goal was to understand what meaningful, sport-specific insights
+        could be extracted from the detected body positions.
+
+        One of the fundamental concepts in Judo is <em>kuzushi</em> (balance breaking). As an initial experiment,
+        I wrote a Python script that monitored torso angle and flagged moments when it exceeded a defined threshold,
+        with the aim of identifying when a competitor's balance was being disrupted.
+
+        The results were mixed. Pose detection was not perfectly reliable during fast exchanges or occlusion between
+        athletes, and torso angle alone did not consistently correlate with genuine balance breaking situations.
+    </p>
+
+    <!-- Video 1 -->
+  <div class="project-media">
+    <video autoplay loop muted playsinline>
+      <source src="./images/gif_1.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <!-- Video 2 -->
+  <div class="project-media">
+    <video autoplay loop muted playsinline>
+      <source src="./images/gif_2.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+</div>
+
+    <p>
+        This led me to experiment with estimating each athlete's centre of mass (CoM) using torso position data.
+        This approach highlighted an aspect of Judo that is often less explicitly discussed: successful throws
+        frequently occur when an opponent's centre of mass is moved outside their base of support.
+
+        In techniques such as Seoi Nage, this can also be achieved by positioning your own centre of mass beneath
+        your opponent's, creating a mechanical advantage that enables the throw.
+    </p>
+      <!-- Video 3 -->
+    <div class="project-media">
+      <video autoplay loop muted playsinline>
+        <source src="./images/gif_3.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <p>
+        I later added a visualisation comparing the estimated centre of mass with the athlete's foot positions.
+        This made it possible to clearly observe how shifts in balance develop over time and how changes in body
+        positioning influence throwing opportunities.
+    </p>
+
+  </section>
+
+  <!-- LEARNINGS -->
+  <section class="project-section">
+    <h2>What I Learned</h2>
+        <p>
+        This project served as an introduction to applying computer vision techniques to real-world sporting analysis.
+        It demonstrated how automated analysis could reveal patterns and metrics that are difficult to notice in real
+        time.
+
+        The project also highlighted future possibilities, such as training models to automatically recognise specific
+        techniques or attempted attacks, potentially providing coaches and athletes with new forms of performance
+        feedback.
+    </p>
+  </section>
+
+</main>
+
+</body>
+</html>
