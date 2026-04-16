@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Satellite Signals &amp; Oil Markets | Harry Ellis</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    /* ── Supplements for index.css, article-specific only ── */
+
+    .project-section h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 1.4rem;
+      color: #111;
+    }
+
+    .project-section h2 {
+      color: #111;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .project-section h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.8rem 0 0.7rem;
+      color: #333;
+    }
+
+    .project-section p {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      margin-bottom: 1.1rem;
+      color: #333;
+    }
+
+    .project-section ul {
+      margin: 0.8rem 0 1.2rem 1.5rem;
+    }
+
+    .project-section ul li {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    /* stat callout cards */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .stat-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 1.4rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .stat-card__value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #111;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-card__label {
+      font-size: 0.85rem;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    /* image caption */
+    .img-caption {
+      font-size: 0.85em;
+      color: #777;
+      margin-top: 8px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* info box */
+    .info-box {
+      background: #f8f8f8;
+      border-left: 4px solid #333;
+      padding: 1rem 1.2rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.7;
+    }
+
+    /* cascade list */
+    .cascade-list {
+      list-style: none;
+      margin: 1rem 0 1.5rem 0;
+      padding: 0;
+    }
+
+    .cascade-list li {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid #eee;
+      font-size: 1.05rem;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .cascade-list li:last-child {
+      border-bottom: none;
+    }
+
+    .cascade-list__time {
+      font-weight: 700;
+      color: #111;
+      min-width: 90px;
+      padding-top: 2px;
+    }
+
+    /* summary table */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      font-size: 0.95em;
+    }
+
+    .summary-table thead tr {
+      background: #f0f0f0;
+    }
+
+    .summary-table th {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 2px solid #ccc;
+      font-weight: 600;
+      color: #111;
+    }
+
+    .summary-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee;
+      color: #444;
+      vertical-align: top;
+    }
+
+    .summary-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.78em;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .tag--success { background: #e6f4ea; color: #276f3f; }
+    .tag--retired { background: #fdecea; color: #b71c1c; }
+    .tag--pending { background: #fff8e1; color: #7b5c00; }
+
+    @media (max-width: 768px) {
+      .stat-row { grid-template-columns: 1fr; }
+      .project-section h1 { font-size: 1.8rem; }
+      .cascade-list__time { min-width: 70px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<main class="project-main">
+
+  <!-- OVERVIEW -->
+  <section class="project-section">
+    <h1>Can Satellites Detect Conflict Before Oil Markets Do?</h1>
+    <p>
+     Following on from my previous project looking at GNSS disruption during the Maduro capture. I wanted to explore first the different methods of measuring and vizulaizing 
+     GNSS data and secondly how machine learning can be used to extract actionable insights from noisy satellite signals.
+    </p>
+    <p>
+      This project asks a specific question: does NASA's CYGNSS satellite constellation, a network
+      of eight microsatellites designed to measure ocean surface conditions, detect the electromagnetic
+      signatures of Houthi attack activity before oil markets price in the risk? And if so, by how long?
+    </p>
+    <p>
+      The answer, based on analysis of CYGNSS reflectometry data across two active conflict periods,
+      is yes, with a statistically significant lead time of approximately nine hours.
+    </p>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <span class="stat-card__value">r = +0.22</span>
+        <span class="stat-card__label">Pearson correlation<br>Red Sea anomaly → WTI price</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__value">9 hours</span>
+        <span class="stat-card__label">Lead time before<br>oil price response</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__value">2.7×</span>
+        <span class="stat-card__label">Lift over baseline<br>event detection rate</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT IS CYGNSS -->
+  <section class="project-section">
+    <h2>What CYGNSS Measures and Why It Matters</h2>
+    <p>
+      CYGNSS (Cyclone Global Navigation Satellite System) was originally designed to measure ocean
+      surface wind speeds inside tropical cyclones. It does this by detecting GPS signals that have
+      bounced off the ocean surface, a technique called GNSS reflectometry. The rougher the surface,
+      the weaker and more scattered the reflected signal.
+    </p>
+    <p>
+      What makes CYGNSS useful for this project is that its primary measurement, the Normalised
+      Bistatic Radar Cross Section (NBRCS), is sensitive to more than just wind. Military radar
+      systems, electronic warfare equipment, naval vessel wakes, and the electromagnetic environment
+      created by active military operations all affect how GPS signals reflect off the ocean surface.
+      In an active conflict zone like the Red Sea during the Houthi campaign, CYGNSS becomes an
+      inadvertent monitoring tool for military activity.
+    </p>
+    <p>
+      CYGNSS has eight satellites in a constellation covering latitudes between 38°N and 38°S -
+      which conveniently includes the entire Red Sea, Bab-el-Mandeb strait, and Gulf of Aden. With
+      a median revisit time of approximately three hours per location, it provides near-continuous
+      coverage of the region's most strategically important chokepoints.
+    </p>
+  </section>
+
+  <!-- STARTING BROAD -->
+  <section class="project-section">
+    <h2>Starting Broad: Multiple Regions, Multiple Signals</h2>
+    <p>
+      The initial approach was deliberately wide. Rather than focusing on a single area, the pipeline
+      was built to extract anomaly signals from six distinct geographic zones simultaneously, each
+      corresponding to a different geopolitical hypothesis:
+    </p>
+    <ul>
+      <li><strong>Strait of Hormuz</strong>, primary global oil transit chokepoint, approximately 20% of world supply</li>
+      <li><strong>Red Sea / Bab-el-Mandeb</strong>, site of active Houthi shipping interdiction</li>
+      <li><strong>Gulf of Aden</strong>, tanker rerouting detection</li>
+      <li><strong>Israel / Gaza airspace</strong>, electronic warfare and strike activity signatures</li>
+      <li><strong>Iranian border region</strong>, countermeasure and air defence signatures</li>
+      <li><strong>Iraq / Syria corridor</strong>, strike route activity</li>
+    </ul>
+    <p>
+      For each zone, CYGNSS Level 1 raw data was processed to extract signal-to-noise ratios,
+      convert satellite positions from ECEF coordinates to geographic latitude and longitude, and
+      aggregate observations into hourly anomaly scores using a rolling z-score methodology.
+      The hypothesis was that different zones would show different lead times and directions,
+      potentially revealing distinct physical mechanisms.
+    </p>
+    <p>
+      A cross-correlation analysis was run between each zone's anomaly time series and WTI crude
+      futures hourly returns, testing lags from zero to twelve hours ahead. The results were
+      more nuanced than expected.
+    </p>
+  </section>
+
+  <!-- CORRELATION RESULTS -->
+  <section class="project-section">
+    <h2>Correlation Results: The Red Sea Stands Out</h2>
+
+    <div class="project-media">
+      <img src="./images/correlation_report.png"
+           alt="Lag correlation heatmap, CYGNSS zone anomalies vs WTI 4h returns">
+      <p class="img-caption">
+        Cross-correlation heatmap. Darker red = satellite anomaly leads price up.
+        Darker blue = satellite anomaly leads price down. Each row is a geographic zone.
+        Each column is a lag in hours.
+      </p>
+    </div>
+
+    <p>
+      Three zones produced statistically significant correlations with WTI price movements:
+    </p>
+    <ul>
+      <li>
+        <strong>Red Sea / Bab-el-Mandeb:</strong> r = +0.22, p = 0.001 at lag 9 hours.
+        Anomaly leads price <em>up</em>, consistent with supply disruption risk being
+        priced in after satellite detection of military activity.
+      </li>
+      <li>
+        <strong>Iraq / Syria Corridor:</strong> r = −0.17, p = 0.01 at lag 10 hours.
+        Anomaly leads price <em>down</em>, potentially consistent with successful
+        interdiction reducing perceived risk.
+      </li>
+      <li>
+        <strong>Strait of Hormuz:</strong> r = −0.15, p = 0.03 at lag 7 hours.
+        Anomaly leads price <em>down</em>, counterintuitively, elevated naval activity
+        near Hormuz may signal active defence rather than closure risk.
+      </li>
+    </ul>
+    <p>
+      The Gulf of Aden, Israel airspace, and Iranian border regions showed no statistically
+      significant correlation on one month of data. The Red Sea result, p = 0.001 across
+      approximately 500 aligned hourly observations, was the most robust signal. The nine-hour
+      lag is physically plausible: it represents the time between a satellite detecting anomalous
+      RF conditions and institutional traders adjusting positions based on downstream intelligence
+      about shipping disruptions.
+    </p>
+  </section>
+
+  <!-- DATA CHALLENGES -->
+  <section class="project-section">
+    <h2>Navigating the Data: From L1 to L2 to L3</h2>
+    <p>
+      One of the most practically challenging aspects of this project was managing CYGNSS data
+      at scale. The raw Level 1 (L1) product contains individual satellite observations with full
+      signal metadata, but at approximately 500MB per file and eight satellites per day, two years
+      of global coverage would require several terabytes of storage. Spatial subsetting is not
+      supported server-side for the L1 product, making targeted downloads impossible.
+    </p>
+    <p>
+      The first attempt used the Level 3 (L3) gridded product, which aggregates observations onto
+      a regular 0.2-degree latitude/longitude grid at hourly resolution. Files are a manageable
+      15MB each, and two years of Red Sea coverage downloaded in under two hours. However, diagnostic
+      analysis revealed a fundamental problem: the L3 mean square slope (MSS) values during known
+      conflict dates were statistically indistinguishable from quiet periods. The L3 processing
+      pipeline smooths and averages the raw signal in ways that remove exactly the kind of sharp,
+      localised anomalies that military activity produces.
+    </p>
+    <p>
+      The solution was CYGNSS Level 2 (L2), a middle ground between the two extremes. L2 provides
+      individual specular point observations with calibrated NBRCS values, geographic coordinates,
+      and timestamps, all in a single merged daily file covering all eight satellites at approximately
+      150MB per day. Crucially, NBRCS in the L2 product retains the sensitivity to short-duration
+      electromagnetic anomalies that the L3 product loses. For the Red Sea bounding box covering
+      October 2023 to January 2024, 104 files were downloaded at a total size of approximately 14GB.
+    </p>
+  </section>
+
+  <!-- ML EVOLUTION -->
+  <section class="project-section">
+    <h2>Machine Learning: What Worked and What Didn't</h2>
+    <p>
+      The machine learning approach evolved significantly as the data characteristics became clearer.
+      Three distinct modelling strategies were attempted, each revealing something important about
+      the underlying signal structure.
+    </p>
+
+    <h3>Wavelet Scalograms and CNN Classification</h3>
+    <p>
+      The initial ML approach applied a Continuous Wavelet Transform (CWT) to each zone's hourly
+      anomaly time series, converting it into a two-dimensional scalogram, essentially a
+      time-frequency representation where the horizontal axis is time and the vertical axis
+      represents the periodicity of anomaly patterns. Short-scale energy corresponds to sudden
+      events like missile launches or radar activations; long-scale energy corresponds to sustained
+      disruption patterns like shipping rerouting campaigns.
+    </p>
+    <p>
+      Multiple zones were stacked into a multi-channel scalogram tensor, analogous to RGB channels
+      in image classification, and fed into a convolutional neural network (CNN) trained to
+      predict four-hour WTI price direction. This approach was conceptually motivated by the
+      intuition that a CNN could learn spatial patterns in the scalogram (for example, an increase
+      of anomaly energy at a specific scale coinciding with a specific zone) that no tabular model
+      could detect.
+    </p>
+    <p>
+      In practice, the approach was constrained by data density. CYGNSS L2 produces approximately
+      5.3 real observation hours per day in the Red Sea bounding box. Wavelet scalograms require
+      dense, continuous time series, attempting to build 24-hour lookback windows from data that
+      is 78% forward-filled produced unreliable scalograms that were dominated by interpolation
+      artefacts rather than genuine signal. The CNN was retired in favour of a more data-appropriate
+      approach.
+    </p>
+
+    <h3>Hidden Markov Model Regime Detection</h3>
+    <p>
+      The second approach attempted to classify each hour as belonging to either a "conflict regime"
+      or a "quiet regime" using a semi-supervised Hidden Markov Model (HMM). The HMM was
+      initialised using empirical means from known conflict and quiet anchor dates, essentially
+      telling the model what conflict and quiet periods look like in feature space before allowing
+      it to learn from the unlabelled data.
+    </p>
+    <p>
+      Features fed to the HMM included the NBRCS anomaly z-score, a wind-corrected anomaly
+      (removing the weather signal by subtracting the wind speed contribution), the ratio of NBRCS
+      to wind speed (high when the surface is anomalously rough relative to wind conditions), and
+      a binary spike indicator flagging the top 5% of NBRCS observations.
+    </p>
+    <p>
+      This approach also ultimately underperformed. The HMM's core assumption, that the data
+      exists in one of two sustained regimes, was incorrect for this signal. Analysis showed that
+      the mean NBRCS anomaly score during validated conflict periods was only marginally higher
+      than during quiet periods when aggregated across all hours. The signal is not regime-sustained;
+      it is event-driven. Individual attack events produce sharp detectable spikes, but the hours
+      between events look indistinguishable from quiet periods.
+    </p>
+
+    <h3>Event-Based Anomaly Detection</h3>
+    <p>
+      The third and most successful approach was the simplest. Rather than classifying every hour,
+      the pipeline was restructured to work only with the 520 hours containing genuine CYGNSS
+      observations (excluding forward-filled gaps), and to flag hours where the NBRCS z-score
+      exceeded 1.5 standard deviations as anomaly events. A wind-correction step ensured that
+      weather-driven surface roughness was excluded.
+    </p>
+    <p>
+      For each detected event, a Random Forest classifier was trained to predict WTI price
+      direction using event features: anomaly magnitude, wind-corrected anomaly strength, raw
+      NBRCS level, mean square slope, leading edge slope, observation count, time of day, and
+      proximity to known attack dates.
+    </p>
+  </section>
+
+  <!-- VALIDATION -->
+  <section class="project-section">
+    <h2>Validation: 2.7x Lift Over Baseline</h2>
+
+    <div class="project-media">
+      <img src="./images/event_validation.png"
+           alt="CYGNSS anomaly events vs validated Houthi attack dates">
+      <p class="img-caption">
+        NBRCS anomaly time series (blue) with detected events (scatter, bottom panel).
+        Vertical dashed lines mark confirmed Houthi attack or escalation dates.
+        Red scatter points fall within 24 hours of a confirmed event.
+        Green shading indicates the pre-campaign quiet baseline period.
+      </p>
+    </div>
+
+    <p>
+      The validation methodology compared detected anomaly events against 17 independently
+      confirmed Houthi attack or escalation incidents, sourced from contemporaneous reporting
+      by the Wilson Center, Wikipedia's Red Sea crisis timeline, and the UN Security Council
+      report record. The key metric was: what fraction of anomaly events fall within 24 hours
+      of a confirmed attack?
+    </p>
+    <p>
+      The result was 37.5%, compared to a baseline rate of 13.8% calculated from the pre-campaign
+      quiet period (October 19 to November 18 2023, before the Galaxy Leader capture). This
+      represents a <strong>2.7x lift over chance</strong>, meaning CYGNSS anomaly events are
+      almost three times more likely to occur near a confirmed attack than random hours of
+      satellite observation.
+    </p>
+    <p>
+      Extended to a 48-hour window, 62.5% of all detected events fall near a confirmed incident.
+      Seven specific spikes were independently matched to named events:
+    </p>
+    <ul>
+      <li><strong>November 27, 2023</strong>, Houthis fire two ballistic missiles at USS Mason</li>
+      <li><strong>December 6, 2023</strong>, Ballistic missile launched toward Eilat, intercepted by Arrow defence system</li>
+      <li><strong>December 13, 2023</strong>, Ardmore Encounter tanker attacked in Bab-el-Mandeb</li>
+      <li><strong>January 1, 2024</strong>, Iranian warship Alborz crosses Bab-el-Mandeb, enters Red Sea</li>
+      <li><strong>January 16, 2024</strong>, Strongest spike in dataset, two days after Operation Poseidon Archer</li>
+      <li><strong>February 19, 2026</strong>, Houthi military mobilisation in Hudayda confirmed by ACLED</li>
+      <li><strong>March 16, 2026</strong>, The Times reports Houthis awaiting Iranian signal with 30 tankers in strike range</li>
+    </ul>
+    <p>
+      Crucially, all 48 detected events passed the wind-correction filter, none were attributable
+      to weather. The anomalies are genuine RF environment changes, not storm artefacts.
+    </p>
+  </section>
+
+  <!-- THE LEAD TIME -->
+  <section class="project-section">
+    <h2>The Nine-Hour Lead: Physical Mechanism</h2>
+    <p>
+      The correlation analysis established that Red Sea NBRCS anomalies lead WTI price increases
+      by approximately nine hours (r = +0.22, p = 0.001). This lag is not arbitrary, it reflects
+      a plausible information cascade from physical event to market pricing:
+    </p>
+
+    <ul class="cascade-list">
+      <li>
+        <span class="cascade-list__time">Hour 0</span>
+        <span>Houthi forces activate radar, electronic warfare systems, or launch preparations.
+        Naval assets respond with countermeasure emissions. CYGNSS detects the change in the
+        electromagnetic environment over the Red Sea surface.</span>
+      </li>
+      <li>
+        <span class="cascade-list__time">Hours 1-4</span>
+        <span>Attack occurs or is repelled. Vessel masters and shipping companies receive
+        incident reports. Rerouting decisions begin.</span>
+      </li>
+      <li>
+        <span class="cascade-list__time">Hours 4-9</span>
+        <span>Insurance underwriters adjust Red Sea risk premiums. Tanker operators communicate
+        route changes. Futures desks at commodity trading firms begin receiving position
+        adjustment requests.</span>
+      </li>
+      <li>
+        <span class="cascade-list__time">Hour 9</span>
+        <span>WTI futures price reflects the updated supply risk premium. The CYGNSS anomaly
+        has now fully propagated through the market information chain.</span>
+      </li>
+    </ul>
+
+    <p>
+      This mechanism distinguishes the signal from simple coincidence. The nine-hour lag
+      is consistent with the time required for maritime incident information to travel from
+      the Red Sea through shipping operations, insurance markets, and into commodity futures
+      pricing, not fast enough to be front-running news, but fast enough to be a genuine
+      leading indicator from a source most market participants cannot access.
+    </p>
+  </section>
+
+  <!-- LIMITATIONS -->
+  <section class="project-section">
+    <h2>Limitations and Honest Caveats</h2>
+    <p>
+      Several important limitations apply to these findings and should be understood before
+      drawing strong conclusions:
+    </p>
+    <p>
+      <strong>Data sparsity.</strong> CYGNSS L2 provides approximately 5.3 real observation
+      hours per day in the Red Sea bounding box. The remaining ~19 hours are gaps in satellite
+      coverage. This limits the precision of event timing and means some attacks may have occurred
+      in coverage gaps and been missed entirely.
+    </p>
+    <p>
+      <strong>Short conflict periods.</strong> The two active conflict windows analysed total
+      approximately six weeks of data. While the correlation results are statistically significant,
+      a larger independent dataset across multiple conflict cycles would substantially strengthen
+      the finding.
+    </p>
+    <p>
+      <strong>No out-of-sample test.</strong> The validated attack dates were used both to
+      build the methodology and to evaluate it. A proper holdout test on a future conflict
+      period that had no input into the model design is needed before making strong claims
+      about generalisability.
+    </p>
+    <p>
+      <strong>Correlation is not causation.</strong> The statistical relationship between
+      CYGNSS anomalies and price movements is consistent with the proposed mechanism but does
+      not prove it. Other confounding factors, news cycles, broader geopolitical sentiment,
+      oil inventory data releases, could contribute to the observed correlations.
+    </p>
+  </section>
+
+  <!-- WHAT'S NEXT -->
+  <section class="project-section">
+    <h2>What Comes Next</h2>
+    <p>
+      The most valuable next step is extending the L2 dataset backwards through the full
+      November 2023 to October 2025 Houthi campaign approximately 700 days of active maritime
+      disruption with over 100 confirmed ship attacks. This would provide both a much larger
+      event detection validation set and the aligned oil price data needed to fully train
+      and evaluate the price direction predictor.
+    </p>
+    <p>
+      A multi-zone extension adding Strait of Hormuz and Gulf of Aden L2 data would test
+      whether the interaction between zones for example, simultaneous Hormuz closure and
+      Red Sea escalation provides stronger predictive signal than any single zone alone.
+      A gradient boosting model with zone-interaction features is a probably and good next step.
+    </p>
+    <p>
+      Live monitoring is also technically feasible. CYGNSS L2 data is available from NASA
+      PO.DAAC with approximately six hours of latency after observation. An automated pipeline
+      that downloads each day's file, runs the anomaly detector, and alerts on threshold exceedance
+      would provide a near-real-time geopolitical signal from space.
+    </p>
+  </section>
+
+  <!-- TECHNICAL SUMMARY -->
+  <section class="project-section">
+    <h2>Technical Summary</h2>
+    <p>
+      The full pipeline is implemented in Python using xarray for NetCDF file handling,
+      pandas for time series alignment, scipy for statistical testing, PyWavelets for the
+      continuous wavelet transform, hmmlearn for the Hidden Markov Model experiments, and
+      scikit-learn for the Random Forest classifier. All data is sourced from publicly
+      available repositories: CYGNSS L2 from NASA PO.DAAC, WTI futures prices from Yahoo
+      Finance via yfinance, and conflict event validation from open-source reporting.
+    </p>
+    <p>
+     
+    </p>
+
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Technique</th>
+          <th>Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Multi-zone correlation</td>
+          <td>Pearson cross-correlation at lags 0-12h</td>
+          <td><span class="tag tag--success">Red Sea r=+0.22, p=0.001 at lag 9h</span></td>
+        </tr>
+        <tr>
+          <td>Wavelet CNN</td>
+          <td>Morlet CWT + multi-channel CNN</td>
+          <td><span class="tag tag--retired">Retired, insufficient data density</span></td>
+        </tr>
+        <tr>
+          <td>Regime detection</td>
+          <td>Semi-supervised Gaussian HMM</td>
+          <td><span class="tag tag--retired">Retired, event-driven, not regime-sustained</span></td>
+        </tr>
+        <tr>
+          <td>Event detection</td>
+          <td>Z-score threshold with wind correction</td>
+          <td><span class="tag tag--success">2.7x lift, 7 named events validated</span></td>
+        </tr>
+        <tr>
+          <td>Price direction</td>
+          <td>Random Forest on event features</td>
+          <td><span class="tag tag--pending">Pending full dataset overlap</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+</body>
+</html>
