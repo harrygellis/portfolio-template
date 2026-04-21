@@ -4,138 +4,488 @@
 <meta charset="UTF-8">
 <title>RSVP Speed Reader</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background: #0f0f0f;
-    color: white;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #222;
+    --border: #2e2e2e;
+    --text: #f0f0f0;
+    --muted: #888;
+    --accent: #E24B4A;
+    --btn-bg: #f0f0f0;
+    --btn-text: #0f0f0f;
+    --progress: #444;
   }
 
-  h1 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
   }
+
+  .app { width: 100%; max-width: 680px; }
+
+  h1 { font-size: 1.4rem; font-weight: 500; margin-bottom: 4px; }
+  .subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1rem;
+  }
+  .tab {
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    user-select: none;
+    transition: color 0.15s;
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .upload-zone {
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    background: var(--surface);
+    margin-bottom: 1rem;
+    transition: background 0.15s;
+  }
+  .upload-zone:hover { background: var(--surface2); }
+  .upload-zone.has-pdf { border-style: solid; border-color: #444; }
+  .upload-label { font-size: 0.9rem; color: var(--muted); cursor: pointer; display: block; }
+  .upload-label strong { color: var(--text); }
+  #fileInput { display: none; }
+
+  .progress-bar-wrap {
+    height: 3px;
+    background: var(--progress);
+    border-radius: 2px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    display: none;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--muted);
+    border-radius: 2px;
+    transition: width 0.2s;
+    width: 0%;
+  }
+
+  .page-group {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 12px;
+    height: 36px;
+  }
+  .page-group.visible { display: flex; }
+  .page-group label { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+  .page-group input[type="number"] {
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+    width: 48px;
+    padding: 0;
+    outline: none;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .page-group .page-count { font-size: 0.75rem; color: var(--muted); }
 
   textarea {
     width: 100%;
-    height: 180px;
-    font-size: 1rem;
-    padding: 10px;
-    box-sizing: border-box;
+    height: 120px;
+    font-size: 0.9rem;
+    padding: 10px 12px;
     border-radius: 8px;
-    border: none;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
     resize: vertical;
+    margin-bottom: 0.75rem;
+    font-family: inherit;
+    outline: none;
+  }
+  textarea:focus { border-color: #555; }
+
+  .reader-display {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .word-display {
+    font-size: 2.6rem;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .pivot { color: var(--accent); }
+  .word-meta {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 8px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .read-progress-track {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--progress);
+  }
+  .read-progress-fill {
+    height: 100%;
+    background: var(--muted);
+    transition: width 0.1s linear;
   }
 
   .controls {
-    margin-top: 10px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
   }
-
-  input[type="number"] {
-    width: 90px;
-    font-size: 1rem;
-    padding: 6px;
-    border-radius: 6px;
+  .wpm-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 12px;
+    height: 36px;
+  }
+  .wpm-group label { font-size: 0.75rem; color: var(--muted); }
+  .wpm-group input {
     border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+    width: 56px;
+    padding: 0;
+    outline: none;
+    font-family: 'Courier New', Courier, monospace;
   }
 
   button {
-    font-size: 1rem;
-    padding: 10px 14px;
+    height: 36px;
+    padding: 0 16px;
     border-radius: 8px;
-    border: none;
-    background: #1e88ff;
-    color: white;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.1s, transform 0.08s;
   }
+  button:hover { background: var(--surface2); }
+  button:active { transform: scale(0.97); }
+  button.primary {
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border-color: transparent;
+    font-weight: 500;
+  }
+  button.primary:hover { opacity: 0.85; }
+  button:disabled { opacity: 0.35; cursor: not-allowed; }
 
-  #reader {
-    margin-top: 30px;
-    height: 200px;
+  .status-bar {
+    font-size: 0.75rem;
+    color: var(--muted);
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    font-size: 3rem;
-    font-weight: 600;
-    border-radius: 12px;
-    background: #181818;
-  }
-
-  .pivot {
-    color: #ff5252;
   }
 </style>
 </head>
-
 <body>
+<div class="app">
+  <h1>RSVP Speed Reader</h1>
+  <p class="subtitle">Upload a PDF or paste text — your position is saved automatically.</p>
 
-<h1>RSVP Speed Reader</h1>
+  <div class="tabs">
+    <div class="tab active" data-tab="pdf">PDF</div>
+    <div class="tab" data-tab="text">Paste text</div>
+  </div>
 
-<p>Paste text below, or select text on this page and press Start.</p>
+  <div class="tab-panel active" id="tab-pdf">
+    <div class="upload-zone" id="uploadZone">
+      <label class="upload-label" for="fileInput">
+        <strong id="uploadLabel">Choose a PDF file</strong><br>
+        <span id="uploadSub" style="font-size:0.8rem; margin-top:4px; display:block;">click to browse or drag &amp; drop</span>
+      </label>
+      <input type="file" id="fileInput" accept="application/pdf">
+    </div>
+    <div class="progress-bar-wrap" id="progressWrap">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
 
-<textarea id="textInput" placeholder="Paste text here…"></textarea>
+  </div>
 
-<div class="controls">
-  <label>WPM</label>
-  <input type="number" id="wpm" value="400" min="100" max="1200">
-  <button onclick="startRSVP()">Start</button>
-  <button onclick="stopRSVP()">Stop</button>
+  <div class="tab-panel" id="tab-text">
+    <textarea id="textInput" placeholder="Paste text here…"></textarea>
+    <button onclick="loadFromTextarea()" style="margin-bottom:1rem;">Load text</button>
+  </div>
+
+  <div class="reader-display">
+    <div class="word-display" id="wordDisplay">Ready</div>
+    <div class="word-meta" id="wordMeta"></div>
+    <div class="read-progress-track">
+      <div class="read-progress-fill" id="readProgress" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="wpm-group">
+      <label>WPM</label>
+      <input type="number" id="wpm" value="300" min="50" max="1200">
+    </div>
+    <div class="page-group" id="pageSelector">
+      <label>Page</label>
+      <input type="number" id="pageInput" value="1" min="1">
+      <span class="page-count" id="pageCount"></span>
+      <button onclick="jumpToPage()" style="height:24px; padding:0 10px; font-size:0.75rem;">Go</button>
+    </div>
+    <button class="primary" id="startBtn" onclick="startRSVP()" disabled>Start</button>
+    <button onclick="stopRSVP()">Pause</button>
+    <button onclick="restartRSVP()">Restart</button>
+  </div>
+
+  <div class="status-bar">
+    <span id="statusText">No content loaded</span>
+    <span id="savedStatus"></span>
+  </div>
 </div>
 
-<div id="reader">Ready</div>
-
 <script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const STORAGE_KEY = 'rsvp_state';
 let words = [];
+let pageBreaks = []; // pageBreaks[i] = first word index of page (i+2)
 let index = 0;
 let timer = null;
+let saveTimeout = null;
 
 function pivotWord(word) {
   if (word.length <= 1) return word;
-  const pivot = Math.floor(word.length / 2);
-  return (
-    word.slice(0, pivot) +
-    '<span class="pivot">' + word[pivot] + '</span>' +
-    word.slice(pivot + 1)
-  );
+  const p = Math.floor(word.length / 2);
+  return word.slice(0, p) + '<span class="pivot">' + word[p] + '</span>' + word.slice(p + 1);
 }
+
+function setStatus(msg) { document.getElementById('statusText').textContent = msg; }
+function setSaved(msg)  { document.getElementById('savedStatus').textContent = msg; }
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ words, pageBreaks, index, wpm: document.getElementById('wpm').value }));
+    setSaved('position saved');
+  } catch(e) {
+    setSaved('save failed — text may be too large');
+  }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const state = JSON.parse(raw);
+    words = state.words || [];
+    pageBreaks = state.pageBreaks || [];
+    index = state.index || 0;
+    document.getElementById('wpm').value = state.wpm || 300;
+    if (words.length) {
+      document.getElementById('startBtn').disabled = false;
+      setStatus('Resumed: word ' + index + ' of ' + words.length);
+      setSaved('position restored');
+      updateDisplay(words[Math.min(index, words.length - 1)]);
+      updateProgress();
+      if (pageBreaks.length) showPageSelector(pageBreaks.length + 1);
+    }
+  } catch(e) {}
+}
+
+function getCurrentPage() {
+  for (let i = pageBreaks.length - 1; i >= 0; i--) {
+    if (index >= pageBreaks[i]) return i + 2;
+  }
+  return 1;
+}
+
+function updateDisplay(word) {
+  if (!word) return;
+  document.getElementById('wordDisplay').innerHTML = pivotWord(word);
+  const pageInfo = pageBreaks.length ? '  p.' + getCurrentPage() : '';
+  document.getElementById('wordMeta').textContent = index + ' / ' + words.length + pageInfo;
+}
+
+function updateProgress() {
+  const pct = words.length ? (index / words.length) * 100 : 0;
+  document.getElementById('readProgress').style.width = pct.toFixed(1) + '%';
+}
+
+function showPageSelector(totalPages) {
+  const sel = document.getElementById('pageSelector');
+  const input = document.getElementById('pageInput');
+  sel.classList.add('visible');
+  input.max = totalPages;
+  document.getElementById('pageCount').textContent = '/ ' + totalPages;
+}
+
+function jumpToPage() {
+  const p = parseInt(document.getElementById('pageInput').value);
+  if (isNaN(p) || p < 1) return;
+  if (p === 1) {
+    index = 0;
+  } else {
+    const breakIdx = p - 2;
+    index = breakIdx < pageBreaks.length ? pageBreaks[breakIdx] : pageBreaks[pageBreaks.length - 1];
+  }
+  stopRSVP();
+  updateDisplay(words[index] || '');
+  updateProgress();
+  setStatus('Jumped to page ' + p + ' (word ' + index + ')');
+  saveState();
+}
+
+function wordsLoaded(text, source, breaks) {
+  words = text.replace(/\s+/g, ' ').trim().split(' ').filter(Boolean);
+  pageBreaks = breaks || [];
+  index = 0;
+  document.getElementById('startBtn').disabled = false;
+  setStatus(source + ' — ' + words.length + ' words loaded');
+  updateDisplay(words[0]);
+  updateProgress();
+  saveState();
+}
+
+function loadFromTextarea() {
+  const t = document.getElementById('textInput').value;
+  if (!t.trim()) return;
+  wordsLoaded(t, 'text pasted', []);
+}
+
+async function extractPDF(file) {
+  const wrap = document.getElementById('progressWrap');
+  const fill = document.getElementById('progressFill');
+  wrap.style.display = 'block';
+  fill.style.width = '0%';
+  setStatus('Extracting text…');
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let fullText = '';
+    const breaks = [];
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const tc = await page.getTextContent();
+      const pageText = tc.items.map(it => it.str).join(' ') + ' ';
+      if (i > 1) {
+        const wordsSoFar = fullText.replace(/\s+/g, ' ').trim().split(' ').filter(Boolean).length;
+        breaks.push(wordsSoFar);
+      }
+      fullText += pageText;
+      fill.style.width = ((i / pdf.numPages) * 100).toFixed(0) + '%';
+    }
+
+    wrap.style.display = 'none';
+    document.getElementById('uploadZone').classList.add('has-pdf');
+    document.getElementById('uploadLabel').textContent = file.name;
+    document.getElementById('uploadSub').textContent = pdf.numPages + ' pages extracted';
+    showPageSelector(pdf.numPages);
+    wordsLoaded(fullText, file.name, breaks);
+  } catch(e) {
+    wrap.style.display = 'none';
+    setStatus('Failed to read PDF — is it a scanned image?');
+  }
+}
+
+document.getElementById('fileInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) extractPDF(file);
+});
+
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => e.preventDefault());
+zone.addEventListener('drop', e => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') extractPDF(file);
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
 
 function startRSVP() {
   stopRSVP();
-
-  let text = window.getSelection().toString();
-  if (!text.trim()) {
-    text = document.getElementById("textInput").value;
-  }
-
-  words = text.replace(/\s+/g, " ").trim().split(" ");
-  index = 0;
-
-  const wpm = parseInt(document.getElementById("wpm").value);
-  const delay = 60000 / wpm;
-
-  if (words.length === 0) return;
-
+  if (!words.length) return;
+  const delay = 60000 / parseInt(document.getElementById('wpm').value);
   timer = setInterval(() => {
-    if (index >= words.length) {
-      stopRSVP();
-      return;
-    }
-    document.getElementById("reader").innerHTML =
-      pivotWord(words[index]);
+    if (index >= words.length) { stopRSVP(); setStatus('Done!'); return; }
+    updateDisplay(words[index]);
+    updateProgress();
     index++;
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(saveState, 2000);
   }, delay);
+  setStatus('Reading…');
 }
 
 function stopRSVP() {
   if (timer) clearInterval(timer);
   timer = null;
+  if (words.length) setStatus('Paused at word ' + index + ' of ' + words.length);
 }
-</script>
 
+function restartRSVP() {
+  stopRSVP();
+  index = 0;
+  updateDisplay(words[0] || '');
+  updateProgress();
+  setStatus('Restarted');
+  saveState();
+}
+
+loadState();
+</script>
 </body>
 </html>
