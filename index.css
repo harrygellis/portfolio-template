@@ -13,7 +13,10 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
 }
-
+.category-btn {
+  /* your existing properties... */
+  font-family: inherit;
+}
 /* ===== HEADER ===== */
 .header {
   background: url("images/header.png") center/cover no-repeat;
